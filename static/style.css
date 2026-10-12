@@ -1,0 +1,366 @@
+/* ==========================================================================
+   Modern & Pastel Not Defteri Stilleri
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Temel Sıfırlama ve Değişkenler */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg-main: #f4f6fa;
+    --card-bg: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-light: #e0e7ff;
+    --primary-shadow: rgba(99, 102, 241, 0.28);
+    
+    --edit-bg: #fef3c7;
+    --edit-text: #b45309;
+    --edit-border: #fde68a;
+    --edit-hover-bg: #fde68a;
+    
+    --delete-bg: #fee2e2;
+    --delete-text: #b91c1c;
+    --delete-border: #fecaca;
+    --delete-hover-bg: #fecaca;
+
+    --border-color: #e2e8f0;
+    --input-bg: #f8fafc;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    
+    --shadow-subtle: 0 2px 4px rgba(15, 23, 42, 0.03);
+    --shadow-card: 0 8px 24px -4px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+    --shadow-hover: 0 14px 28px -4px rgba(15, 23, 42, 0.09), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+    
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.5;
+    padding: 40px 20px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Ana Taşıyıcı */
+.app-container {
+    max-width: 660px;
+    margin: 0 auto;
+}
+
+/* Başlık Alanı */
+.app-header {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.app-header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-header .subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Form Kartı */
+form {
+    background: var(--card-bg);
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
+    margin-bottom: 36px;
+    transition: var(--transition);
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--input-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: var(--text-muted);
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    background-color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-shadow);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 105px;
+}
+
+/* Butonlar */
+button,
+.btn-vazgec {
+    font-family: inherit;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+/* Kaydet / Birincil Buton */
+button[type="submit"],
+.btn-kaydet {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px var(--primary-shadow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+button[type="submit"]:hover,
+.btn-kaydet:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--primary-shadow);
+    filter: brightness(1.05);
+}
+
+button[type="submit"]:active,
+.btn-kaydet:active {
+    transform: translateY(0);
+}
+
+/* Vazgeç Butonu (Düzenleme sayfası için) */
+.btn-vazgec {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f5f9;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+}
+
+.btn-vazgec:hover {
+    background-color: #e2e8f0;
+    color: var(--text-primary);
+}
+
+.btn-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Liste Başlığı */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 0 4px;
+}
+
+.section-header h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.not-sayisi {
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* Not Kartları */
+.not-listesi {
+    list-style: none;
+    padding: 0;
+}
+
+.not-karti {
+    background: var(--card-bg);
+    padding: 20px 22px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    transition: var(--transition);
+}
+
+.not-karti:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
+}
+
+.not-icerik {
+    flex-grow: 1;
+}
+
+.not-karti h3 {
+    margin: 0 0 6px 0;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.not-karti p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Aksiyon Butonları */
+.not-butonlar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Düzenle Butonu (Pastel Kehribar/Sarı) */
+.btn-duzenle {
+    background-color: var(--edit-bg);
+    color: var(--edit-text);
+    border: 1px solid var(--edit-border);
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: var(--transition);
+}
+
+.btn-duzenle:hover {
+    background-color: var(--edit-hover-bg);
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.15);
+}
+
+.btn-duzenle:active {
+    transform: translateY(0);
+}
+
+/* Sil Butonu (Pastel Gül/Kırmızı) */
+.btn-sil {
+    background-color: var(--delete-bg);
+    color: var(--delete-text);
+    border: 1px solid var(--delete-border);
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: var(--transition);
+}
+
+.btn-sil:hover {
+    background-color: var(--delete-hover-bg);
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
+}
+
+.btn-sil:active {
+    transform: translateY(0);
+}
+
+/* Boş Durum (Empty State) */
+.bos-durum {
+    background: var(--card-bg);
+    border: 2px dashed #cbd5e1;
+    border-radius: var(--radius-lg);
+    padding: 44px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.bos-durum .bos-ikon {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.bos-durum p {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.bos-durum span {
+    font-size: 13px;
+    color: var(--text-muted);
+}
