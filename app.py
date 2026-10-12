@@ -42,5 +42,31 @@ def not_ekle():
         conn.close()
     return redirect(url_for('ana_sayfa'))
 
+@app.route('/sil/<int:id>', methods=['GET', 'POST'])
+def not_sil(id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM Notlar WHERE id = ?', (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('ana_sayfa'))
+
+@app.route('/duzenle/<int:id>', methods=['GET', 'POST'])
+def not_duzenle(id):
+    conn = get_db_connection()
+    if request.method == 'POST':
+        baslik = request.form.get('baslik')
+        icerik = request.form.get('icerik')
+        if baslik and icerik:
+            conn.execute('UPDATE Notlar SET baslik = ?, icerik = ? WHERE id = ?', (baslik, icerik, id))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('ana_sayfa'))
+    
+    kayit = conn.execute('SELECT * FROM Notlar WHERE id = ?', (id,)).fetchone()
+    conn.close()
+    if kayit is None:
+        return redirect(url_for('ana_sayfa'))
+    return render_template('duzenle.html', kayit=kayit)
+
 if __name__ == '__main__':
     app.run(debug=True)
