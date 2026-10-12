@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notu Düzenle - Not Uygulaması</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f7f9fa;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .btn-vazgec {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        .btn-vazgec:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notu Düzenle</h1>
+
+    <!-- Not Düzenleme Formu -->
+    <form action="/duzenle/{{ kayit['id'] }}" method="POST">
+        <div class="form-group">
+            <label for="baslik">Başlık</label>
+            <input type="text" id="baslik" name="baslik" value="{{ kayit['baslik'] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="icerik">İçerik</label>
+            <textarea id="icerik" name="icerik" required>{{ kayit['icerik'] }}</textarea>
+        </div>
+        <div class="btn-group">
+            <button type="submit">Güncelle</button>
+            <a href="/" class="btn-vazgec">Vazgeç</a>
+        </div>
+    </form>
+</body>
+</html>

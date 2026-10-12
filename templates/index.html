@@ -65,6 +65,13 @@
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .not-icerik {
+            flex-grow: 1;
+            margin-right: 15px;
         }
         .not-karti h3 {
             margin: 0 0 8px 0;
@@ -74,6 +81,38 @@
             margin: 0;
             color: #666;
             white-space: pre-wrap;
+        }
+        .not-butonlar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn-duzenle {
+            background-color: #ffc107;
+            color: #212529;
+            text-decoration: none;
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .btn-duzenle:hover {
+            background-color: #e0a800;
+        }
+        .btn-sil {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-sil:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
@@ -98,8 +137,16 @@
         <ul class="not-listesi">
             {% for kayit in notlar %}
                 <li class="not-karti">
-                    <h3>{{ kayit['baslik'] }}</h3>
-                    <p>{{ kayit['icerik'] }}</p>
+                    <div class="not-icerik">
+                        <h3>{{ kayit['baslik'] }}</h3>
+                        <p>{{ kayit['icerik'] }}</p>
+                    </div>
+                    <div class="not-butonlar">
+                        <a href="/duzenle/{{ kayit['id'] }}" class="btn-duzenle">Düzenle</a>
+                        <form action="/sil/{{ kayit['id'] }}" method="POST" style="margin: 0;">
+                            <button type="submit" class="btn-sil">Sil</button>
+                        </form>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
