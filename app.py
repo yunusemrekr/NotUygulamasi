@@ -12,12 +12,13 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     conn.execute('''
-        CREATE TABLE IF NOT EXISTS Notlar (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            baslik TEXT NOT NULL,
-            icerik TEXT NOT NULL
-        )
-    ''')
+            CREATE TABLE IF NOT EXISTS Notlar (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                baslik TEXT NOT NULL,
+                icerik TEXT NOT NULL,
+                tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
     conn.commit()
     conn.close()
 
@@ -69,4 +70,4 @@ def not_duzenle(id):
     return render_template('duzenle.html', kayit=kayit)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True)

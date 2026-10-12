@@ -43,6 +43,7 @@
                         <div class="not-icerik">
                             <h3>{{ kayit['baslik'] }}</h3>
                             <p>{{ kayit['icerik'] }}</p>
+                            <small class="not-tarihi">{{ kayit['tarih'] }}</small>
                         </div>
                         <div class="not-butonlar">
                             <a href="/duzenle/{{ kayit['id'] }}" class="btn-duzenle">✏️ Düzenle</a>
@@ -61,5 +62,34 @@
             </div>
         {% endif %}
     </div>
+<!-- Tarihi yerel saate çeviren JavaScript kodumuz -->
+    <script>
+        // Sayfadaki tüm tarih etiketlerini bul
+        const tarihEtiketleri = document.querySelectorAll('.not-tarihi');
+
+        tarihEtiketleri.forEach(etiket => {
+            const hamTarih = etiket.textContent;
+            
+            if (hamTarih) {
+                // SQLite'tan gelen tarihin Evrensel (UTC) olduğunu tarayıcıya bildiriyoruz
+                const tarihObjesi = new Date(hamTarih + " UTC");
+
+                // Tarihi Türkçe formatta ve yerel saat diliminde yeniden düzenliyoruz
+                const guzelTarih = tarihObjesi.toLocaleString('tr-TR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                // HTML'deki ham yazıyı güzel haliyle değiştiriyoruz
+                etiket.textContent = guzelTarih;
+            }
+        });
+    </script>
+
+
+
 </body>
 </html>
