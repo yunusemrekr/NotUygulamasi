@@ -16,9 +16,16 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 baslik TEXT NOT NULL,
                 icerik TEXT NOT NULL,
-                tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                kategori TEXT DEFAULT 'Genel'
             )
         ''')
+    # Var olan veritabanında 'kategori' sütunu yoksa ekle (Migration)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(Notlar)")
+    sutunlar = [kolon[1] for kolon in cursor.fetchall()]
+    if 'kategori' not in sutunlar:
+        conn.execute("ALTER TABLE Notlar ADD COLUMN kategori TEXT DEFAULT 'Genel'")
     conn.commit()
     conn.close()
 
@@ -36,9 +43,10 @@ def ana_sayfa():
 def not_ekle():
     baslik = request.form.get('baslik')
     icerik = request.form.get('icerik')
+    kategori = request.form.get('kategori', 'Genel')
     if baslik and icerik:
         conn = get_db_connection()
-        conn.execute('INSERT INTO Notlar (baslik, icerik) VALUES (?, ?)', (baslik, icerik))
+        conn.execute('INSERT INTO Notlar (baslik, icerik, kategori) VALUES (?, ?, ?)', (baslik, icerik, kategori))
         conn.commit()
         conn.close()
     return redirect(url_for('ana_sayfa'))
@@ -57,8 +65,9 @@ def not_duzenle(id):
     if request.method == 'POST':
         baslik = request.form.get('baslik')
         icerik = request.form.get('icerik')
+        kategori = request.form.get('kategori', 'Genel')
         if baslik and icerik:
-            conn.execute('UPDATE Notlar SET baslik = ?, icerik = ? WHERE id = ?', (baslik, icerik, id))
+            conn.execute('UPDATE Notlar SET baslik = ?, icerik = ?, kategori = ? WHERE id = ?', (baslik, icerik, kategori, id))
             conn.commit()
             conn.close()
             return redirect(url_for('ana_sayfa'))

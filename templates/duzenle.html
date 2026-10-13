@@ -32,7 +32,7 @@
             font-weight: bold;
             color: #555;
         }
-        input[type="text"], textarea {
+        input[type="text"], select, textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -83,6 +83,16 @@
         <div class="form-group">
             <label for="baslik">Başlık</label>
             <input type="text" id="baslik" name="baslik" value="{{ kayit['baslik'] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="kategori">Kategori</label>
+            <select id="kategori" name="kategori">
+                <option value="Genel" {% if kayit['kategori'] == 'Genel' %}selected{% endif %}>Genel</option>
+                <option value="Ders" {% if kayit['kategori'] == 'Ders' %}selected{% endif %}>Ders</option>
+                <option value="İş" {% if kayit['kategori'] == 'İş' %}selected{% endif %}>İş</option>
+                <option value="Kişisel" {% if kayit['kategori'] == 'Kişisel' %}selected{% endif %}>Kişisel</option>
+                <option value="İlim" {% if kayit['kategori'] == 'İlim' %}selected{% endif %}>İlim</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="icerik">İçerik</label>
