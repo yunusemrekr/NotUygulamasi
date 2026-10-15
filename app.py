@@ -15,7 +15,9 @@ def init_db():
         CREATE TABLE IF NOT EXISTS Notlar (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             baslik TEXT NOT NULL,
-            icerik TEXT NOT NULL
+            icerik TEXT NOT NULL,
+            tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            kategori TEXT DEFAULT 'Genel'
         )
     ''')
     conn.commit()
@@ -33,16 +35,17 @@ def ana_sayfa():
 
 @app.route('/ekle', methods=['POST'])
 def not_ekle():
-    baslik = request.form.get('baslik')
-    icerik = request.form.get('icerik')
+    baslik = (request.form.get('baslik') or '').strip()
+    icerik = (request.form.get('icerik') or '').strip()
+    kategori = (request.form.get('kategori') or 'Genel').strip()
     if baslik and icerik:
         conn = get_db_connection()
-        conn.execute('INSERT INTO Notlar (baslik, icerik) VALUES (?, ?)', (baslik, icerik))
+        conn.execute('INSERT INTO Notlar (baslik, icerik, kategori) VALUES (?, ?, ?)', (baslik, icerik, kategori))
         conn.commit()
         conn.close()
     return redirect(url_for('ana_sayfa'))
 
-@app.route('/sil/<int:id>', methods=['GET', 'POST'])
+@app.route('/sil/<int:id>', methods=['POST'])
 def not_sil(id):
     conn = get_db_connection()
     conn.execute('DELETE FROM Notlar WHERE id = ?', (id,))
@@ -54,10 +57,11 @@ def not_sil(id):
 def not_duzenle(id):
     conn = get_db_connection()
     if request.method == 'POST':
-        baslik = request.form.get('baslik')
-        icerik = request.form.get('icerik')
+        baslik = (request.form.get('baslik') or '').strip()
+        icerik = (request.form.get('icerik') or '').strip()
+        kategori = (request.form.get('kategori') or 'Genel').strip()
         if baslik and icerik:
-            conn.execute('UPDATE Notlar SET baslik = ?, icerik = ? WHERE id = ?', (baslik, icerik, id))
+            conn.execute('UPDATE Notlar SET baslik = ?, icerik = ?, kategori = ? WHERE id = ?', (baslik, icerik, kategori, id))
             conn.commit()
             conn.close()
             return redirect(url_for('ana_sayfa'))
@@ -69,4 +73,4 @@ def not_duzenle(id):
     return render_template('duzenle.html', kayit=kayit)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True)

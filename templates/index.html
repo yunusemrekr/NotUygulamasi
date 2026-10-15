@@ -16,10 +16,20 @@
         </header>
 
         <!-- Not Ekleme Formu -->
-        <form action="/ekle" method="POST">
+        <form action="/ekle" method="POST" class="form-kart">
             <div class="form-group">
                 <label for="baslik">Başlık</label>
                 <input type="text" id="baslik" name="baslik" placeholder="Not başlığı girin..." required>
+            </div>
+            <div class="form-group">
+                <label for="kategori">Kategori</label>
+                <select id="kategori" name="kategori">
+                    <option value="Genel">Genel</option>
+                    <option value="Ders">Ders</option>
+                    <option value="İş">İş</option>
+                    <option value="Kişisel">Kişisel</option>
+                    <option value="İlim">İlim</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="icerik">İçerik</label>
@@ -41,14 +51,16 @@
                 {% for kayit in notlar %}
                     <li class="not-karti">
                         <div class="not-icerik">
-                            <h3>{{ kayit['baslik'] }}</h3>
+                            <div class="not-kart-ust">
+                                <h3>{{ kayit['baslik'] }}</h3>
+                                <span class="kategori-rozet rozet-{{ kayit['kategori'] }}">{{ kayit['kategori'] or 'Genel' }}</span>
+                            </div>
                             <p>{{ kayit['icerik'] }}</p>
+                            <small class="not-tarihi">{{ kayit['tarih'] }}</small>
                         </div>
                         <div class="not-butonlar">
                             <a href="/duzenle/{{ kayit['id'] }}" class="btn-duzenle">✏️ Düzenle</a>
-                            <form action="/sil/{{ kayit['id'] }}" method="POST" style="margin: 0;">
-                                <button type="submit" class="btn-sil">🗑️ Sil</button>
-                            </form>
+                            <button type="button" class="btn-sil" onclick="silmeOnayiAc({{ kayit['id'] }})">🗑️ Sil</button>
                         </div>
                     </li>
                 {% endfor %}
@@ -61,5 +73,71 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- Modern Silme Onay Modalı -->
+    <div id="silmeModal" class="modal-arkaplan" onclick="modalDisiTiklandi(event)">
+        <div class="modal-kutu">
+            <div class="modal-ikon">🗑️</div>
+            <h3>Notu Silmek İstiyor musunuz?</h3>
+            <p>Bu not kalıcı olarak silinecektir. Bu işlem geri alınamaz.</p>
+            <div class="modal-butonlar">
+                <button type="button" class="btn-modal-vazgec" onclick="modalKapat()">Vazgeç</button>
+                <form id="modalSilForm" method="POST" action="">
+                    <button type="submit" class="btn-modal-sil">Evet, Sil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarihi yerel saate çeviren ve modalı yöneten JavaScript kodumuz -->
+    <script>
+        // Sayfadaki tüm tarih etiketlerini bul
+        const tarihEtiketleri = document.querySelectorAll('.not-tarihi');
+
+        tarihEtiketleri.forEach(etiket => {
+            const hamTarih = etiket.textContent;
+            
+            if (hamTarih) {
+                // SQLite'tan gelen tarihin Evrensel (UTC) olduğunu tarayıcıya bildiriyoruz
+                const tarihObjesi = new Date(hamTarih + " UTC");
+
+                // Tarihi Türkçe formatta ve yerel saat diliminde yeniden düzenliyoruz
+                const guzelTarih = tarihObjesi.toLocaleString('tr-TR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                // HTML'deki ham yazıyı güzel haliyle değiştiriyoruz
+                etiket.textContent = guzelTarih;
+            }
+        });
+
+        // Modern Silme Modalı Fonksiyonları
+        function silmeOnayiAc(notId) {
+            const form = document.getElementById('modalSilForm');
+            form.action = '/sil/' + notId;
+            document.getElementById('silmeModal').classList.add('aktif');
+        }
+
+        function modalKapat() {
+            document.getElementById('silmeModal').classList.remove('aktif');
+        }
+
+        function modalDisiTiklandi(event) {
+            if (event.target.id === 'silmeModal') {
+                modalKapat();
+            }
+        }
+
+        // ESC tuşuna basınca modalı kapat
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                modalKapat();
+            }
+        });
+    </script>
 </body>
 </html>
