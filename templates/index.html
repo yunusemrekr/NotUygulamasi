@@ -1,78 +1,86 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Not Uygulaması</title>
-    <!-- Elbisemizi (CSS) çağıran köprümüz -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Başlık Alanı -->
-        <header class="app-header">
-            <h1>📝 Not Defterim</h1>
-            <p class="subtitle">Fikirlerinizi, planlarınızı ve notlarınızı düzenli tutun</p>
-        </header>
+{% extends 'base.html' %}
 
-        <!-- Not Ekleme Formu -->
-        <form action="/ekle" method="POST" class="form-kart">
-            <div class="form-group">
-                <label for="baslik">Başlık</label>
-                <input type="text" id="baslik" name="baslik" placeholder="Not başlığı girin..." required>
-            </div>
-            <div class="form-group">
-                <label for="kategori">Kategori</label>
-                <select id="kategori" name="kategori">
-                    <option value="Genel">Genel</option>
-                    <option value="Ders">Ders</option>
-                    <option value="İş">İş</option>
-                    <option value="Kişisel">Kişisel</option>
-                    <option value="İlim">İlim</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="icerik">İçerik</label>
-                <textarea id="icerik" name="icerik" placeholder="Not içeriğinizi buraya yazın..." required></textarea>
-            </div>
-            <button type="submit" class="btn-kaydet">💾 Notu Kaydet</button>
-        </form>
+{% block baslik %}Not Defterim - Not Uygulaması{% endblock %}
 
-        <!-- Liste Başlığı -->
-        <div class="section-header">
-            <h2>📌 Eklenen Notlar</h2>
-            {% if notlar %}
-                <span class="not-sayisi">{{ notlar|length }} Not</span>
-            {% endif %}
+{% block icerik %}
+    <!-- Başlık Alanı -->
+    <header class="app-header">
+        <h1>📝 Not Defterim</h1>
+        <p class="subtitle">Fikirlerinizi, planlarınızı ve notlarınızı düzenli tutun</p>
+    </header>
+
+    <!-- Not Ekleme Formu -->
+    <form action="/ekle" method="POST" class="form-kart">
+        <div class="form-group">
+            <label for="baslik">Başlık</label>
+            <input type="text" id="baslik" name="baslik" placeholder="Not başlığı girin..." required>
         </div>
+        <div class="form-group">
+            <label for="kategori">Kategori</label>
+            <select id="kategori" name="kategori">
+                <option value="Genel">Genel</option>
+                <option value="Ders">Ders</option>
+                <option value="İş">İş</option>
+                <option value="Kişisel">Kişisel</option>
+                <option value="İlim">İlim</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="icerik">İçerik</label>
+            <textarea id="icerik" name="icerik" placeholder="Not içeriğinizi buraya yazın..." required></textarea>
+        </div>
+        <button type="submit" class="btn-kaydet">💾 Notu Kaydet</button>
+    </form>
 
+    <!-- Liste Başlığı -->
+    <div class="section-header">
+        <h2>📌 Eklenen Notlar</h2>
         {% if notlar %}
-            <ul class="not-listesi">
-                {% for kayit in notlar %}
-                    <li class="not-karti">
-                        <div class="not-icerik">
-                            <div class="not-kart-ust">
-                                <h3>{{ kayit['baslik'] }}</h3>
-                                <span class="kategori-rozet rozet-{{ kayit['kategori'] }}">{{ kayit['kategori'] or 'Genel' }}</span>
-                            </div>
-                            <p>{{ kayit['icerik'] }}</p>
-                            <small class="not-tarihi">{{ kayit['tarih'] }}</small>
-                        </div>
-                        <div class="not-butonlar">
-                            <a href="/duzenle/{{ kayit['id'] }}" class="btn-duzenle">✏️ Düzenle</a>
-                            <button type="button" class="btn-sil" onclick="silmeOnayiAc({{ kayit['id'] }})">🗑️ Sil</button>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div class="bos-durum">
-                <div class="bos-ikon">🗒️</div>
-                <p>Henüz eklenmiş bir not yok</p>
-                <span>Yukarıdaki formu kullanarak ilk notunuzu ekleyebilirsiniz.</span>
-            </div>
+            <span class="not-sayisi">{{ notlar|length }} Not</span>
         {% endif %}
     </div>
+
+    <!-- Kategori Filtre Sekmeleri -->
+    <div class="kategori-filtreler">
+        <button type="button" class="filtre-btn aktif" data-kategori="Tümü" onclick="kategoriFiltrele('Tümü')">Tümü</button>
+        <button type="button" class="filtre-btn" data-kategori="Genel" onclick="kategoriFiltrele('Genel')">Genel</button>
+        <button type="button" class="filtre-btn" data-kategori="Ders" onclick="kategoriFiltrele('Ders')">Ders</button>
+        <button type="button" class="filtre-btn" data-kategori="İş" onclick="kategoriFiltrele('İş')">İş</button>
+        <button type="button" class="filtre-btn" data-kategori="Kişisel" onclick="kategoriFiltrele('Kişisel')">Kişisel</button>
+        <button type="button" class="filtre-btn" data-kategori="İlim" onclick="kategoriFiltrele('İlim')">İlim</button>
+    </div>
+
+    {% if notlar %}
+        <ul class="not-listesi">
+            {% for kayit in notlar %}
+                <li class="not-karti" data-kategori="{{ kayit['kategori'] or 'Genel' }}">
+                    <div class="not-icerik">
+                        <div class="not-kart-ust">
+                            <h3>{{ kayit['baslik'] }}</h3>
+                            <span class="kategori-rozet rozet-{{ kayit['kategori'] }}">{{ kayit['kategori'] or 'Genel' }}</span>
+                        </div>
+                        <p>{{ kayit['icerik'] }}</p>
+                        <small class="not-tarihi">{{ kayit['tarih'] }}</small>
+                    </div>
+                    <div class="not-butonlar">
+                        <a href="/duzenle/{{ kayit['id'] }}" class="btn-duzenle">✏️ Düzenle</a>
+                        <button type="button" class="btn-sil" onclick="silmeOnayiAc({{ kayit['id'] }})">🗑️ Sil</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <div id="filtreBosDurum" class="bos-durum" style="display: none;">
+            <div class="bos-ikon">🔍</div>
+            <p>Bu kategoride henüz not bulunmuyor</p>
+            <span>Başka bir kategori seçebilir veya yukarıdan yeni bir not ekleyebilirsiniz.</span>
+        </div>
+    {% else %}
+        <div class="bos-durum">
+            <div class="bos-ikon">🗒️</div>
+            <p>Henüz eklenmiş bir not yok</p>
+            <span>Yukarıdaki formu kullanarak ilk notunuzu ekleyebilirsiniz.</span>
+        </div>
+    {% endif %}
 
     <!-- Modern Silme Onay Modalı -->
     <div id="silmeModal" class="modal-arkaplan" onclick="modalDisiTiklandi(event)">
@@ -88,20 +96,18 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <!-- Tarihi yerel saate çeviren ve modalı yöneten JavaScript kodumuz -->
+{% block scriptler %}
     <script>
-        // Sayfadaki tüm tarih etiketlerini bul
+        // Sayfadaki tüm tarih etiketlerini bul ve yerel saate çevir
         const tarihEtiketleri = document.querySelectorAll('.not-tarihi');
 
         tarihEtiketleri.forEach(etiket => {
             const hamTarih = etiket.textContent;
             
             if (hamTarih) {
-                // SQLite'tan gelen tarihin Evrensel (UTC) olduğunu tarayıcıya bildiriyoruz
                 const tarihObjesi = new Date(hamTarih + " UTC");
-
-                // Tarihi Türkçe formatta ve yerel saat diliminde yeniden düzenliyoruz
                 const guzelTarih = tarihObjesi.toLocaleString('tr-TR', {
                     year: 'numeric',
                     month: 'long',
@@ -109,8 +115,6 @@
                     hour: '2-digit',
                     minute: '2-digit'
                 });
-
-                // HTML'deki ham yazıyı güzel haliyle değiştiriyoruz
                 etiket.textContent = guzelTarih;
             }
         });
@@ -138,6 +142,48 @@
                 modalKapat();
             }
         });
+
+        // Kategori Filtreleme Fonksiyonu
+        function kategoriFiltrele(secilenKategori) {
+            // Butonların aktiflik stilini güncelle
+            const butonlar = document.querySelectorAll('.filtre-btn');
+            butonlar.forEach(btn => {
+                if (btn.getAttribute('data-kategori') === secilenKategori) {
+                    btn.classList.add('aktif');
+                } else {
+                    btn.classList.remove('aktif');
+                }
+            });
+
+            // Kartları filtrele
+            const kartlar = document.querySelectorAll('.not-karti');
+            let gorunenSayisi = 0;
+
+            kartlar.forEach(kart => {
+                const kartKategori = kart.getAttribute('data-kategori');
+                if (secilenKategori === 'Tümü' || kartKategori === secilenKategori) {
+                    kart.style.display = 'flex';
+                    gorunenSayisi++;
+                } else {
+                    kart.style.display = 'none';
+                }
+            });
+
+            // Eğer filtrede hiç not kalmadıysa boş durum mesajını göster
+            const filtreBosDurum = document.getElementById('filtreBosDurum');
+            if (filtreBosDurum) {
+                if (gorunenSayisi === 0 && kartlar.length > 0) {
+                    filtreBosDurum.style.display = 'block';
+                } else {
+                    filtreBosDurum.style.display = 'none';
+                }
+            }
+
+            // Eklenen Notlar sayısını güncelle
+            const notSayisiRozeti = document.querySelector('.not-sayisi');
+            if (notSayisiRozeti) {
+                notSayisiRozeti.textContent = gorunenSayisi + ' Not';
+            }
+        }
     </script>
-</body>
-</html>
+{% endblock %}

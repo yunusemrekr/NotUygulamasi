@@ -1,44 +1,37 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notu Düzenle - Not Uygulaması</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Başlık Alanı -->
-        <header class="app-header">
-            <h1>✏️ Notu Düzenle</h1>
-            <p class="subtitle">Notunuzun başlığını, kategorisini ve içeriğini güncelleyin</p>
-        </header>
+{% extends 'base.html' %}
 
-        <!-- Not Düzenleme Formu -->
-        <form action="/duzenle/{{ kayit['id'] }}" method="POST" class="form-kart">
-            <div class="form-group">
-                <label for="baslik">Başlık</label>
-                <input type="text" id="baslik" name="baslik" value="{{ kayit['baslik'] }}" required>
-            </div>
-            <div class="form-group">
-                <label for="kategori">Kategori</label>
-                <select id="kategori" name="kategori">
-                    <option value="Genel" {% if kayit['kategori'] == 'Genel' %}selected{% endif %}>Genel</option>
-                    <option value="Ders" {% if kayit['kategori'] == 'Ders' %}selected{% endif %}>Ders</option>
-                    <option value="İş" {% if kayit['kategori'] == 'İş' %}selected{% endif %}>İş</option>
-                    <option value="Kişisel" {% if kayit['kategori'] == 'Kişisel' %}selected{% endif %}>Kişisel</option>
-                    <option value="İlim" {% if kayit['kategori'] == 'İlim' %}selected{% endif %}>İlim</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="icerik">İçerik</label>
-                <textarea id="icerik" name="icerik" required>{{ kayit['icerik'] }}</textarea>
-            </div>
-            <div class="btn-group">
-                <button type="submit" class="btn-kaydet">💾 Değişiklikleri Kaydet</button>
-                <a href="/" class="btn-vazgec">Vazgeç</a>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
+{% block baslik %}Notu Düzenle - Not Uygulaması{% endblock %}
+
+{% block icerik %}
+    <!-- Başlık Alanı -->
+    <header class="app-header">
+        <h1>✏️ Notu Düzenle</h1>
+        <p class="subtitle">Notunuzun başlığını, kategorisini ve içeriğini güncelleyin</p>
+    </header>
+
+    <!-- Not Düzenleme Formu -->
+    <form action="/duzenle/{{ kayit['id'] }}" method="POST" class="form-kart">
+        <div class="form-group">
+            <label for="baslik">Başlık</label>
+            <input type="text" id="baslik" name="baslik" value="{{ kayit['baslik'] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="kategori">Kategori</label>
+            <select id="kategori" name="kategori">
+                <option value="Genel" {% if kayit['kategori'] == 'Genel' %}selected{% endif %}>Genel</option>
+                <option value="Ders" {% if kayit['kategori'] == 'Ders' %}selected{% endif %}>Ders</option>
+                <option value="İş" {% if kayit['kategori'] == 'İş' %}selected{% endif %}>İş</option>
+                <option value="Kişisel" {% if kayit['kategori'] == 'Kişisel' %}selected{% endif %}>Kişisel</option>
+                <option value="İlim" {% if kayit['kategori'] == 'İlim' %}selected{% endif %}>İlim</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="icerik">İçerik</label>
+            <textarea id="icerik" name="icerik" required>{{ kayit['icerik'] }}</textarea>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn-kaydet">💾 Değişiklikleri Kaydet</button>
+            <a href="/" class="btn-vazgec">Vazgeç</a>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block baslik %}Not Uygulaması{% endblock %}</title>
+    <!-- Ortak CSS Dosyamız -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Ortak Flash Bildirimleri -->
+        {% with mesajlar = get_flashed_messages(with_categories=true) %}
+            {% if mesajlar %}
+                <div class="flash-kapsayici">
+                    {% for kategori, mesaj in mesajlar %}
+                        <div class="flash-mesaj flash-{{ kategori }}">
+                            <span class="flash-metin">{{ mesaj }}</span>
+                            <button type="button" class="flash-kapat" onclick="this.parentElement.remove()" title="Kapat">✕</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Her sayfanın kendi özel içeriği buraya gelecek -->
+        {% block icerik %}
+        {% endblock %}
+    </div>
+
+    <!-- Ortak Flash Bildirimlerini Kapatma Scripti -->
+    <script>
+        setTimeout(() => {
+            const flashMesajlar = document.querySelectorAll('.flash-mesaj');
+            flashMesajlar.forEach(mesaj => {
+                mesaj.style.opacity = '0';
+                mesaj.style.transform = 'translateY(-6px)';
+                setTimeout(() => mesaj.remove(), 300);
+            });
+        }, 3500);
+    </script>
+
+    <!-- Sayfalara özel ekstra JavaScript kodları -->
+    {% block scriptler %}
+    {% endblock %}
+</body>
+</html>

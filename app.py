@@ -1,7 +1,8 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
+app.secret_key = 'not_uygulamasi_guvenli_anahtar'
 DB_NAME = 'notlar.db'
 
 def get_db_connection():
@@ -43,6 +44,9 @@ def not_ekle():
         conn.execute('INSERT INTO Notlar (baslik, icerik, kategori) VALUES (?, ?, ?)', (baslik, icerik, kategori))
         conn.commit()
         conn.close()
+        flash('Notunuz başarıyla kaydedildi! 💾', 'basari')
+    else:
+        flash('Lütfen başlık ve içerik alanlarını doldurun.', 'hata')
     return redirect(url_for('ana_sayfa'))
 
 @app.route('/sil/<int:id>', methods=['POST'])
@@ -51,6 +55,7 @@ def not_sil(id):
     conn.execute('DELETE FROM Notlar WHERE id = ?', (id,))
     conn.commit()
     conn.close()
+    flash('Not başarıyla silindi. 🗑️', 'silindi')
     return redirect(url_for('ana_sayfa'))
 
 @app.route('/duzenle/<int:id>', methods=['GET', 'POST'])
@@ -64,7 +69,10 @@ def not_duzenle(id):
             conn.execute('UPDATE Notlar SET baslik = ?, icerik = ?, kategori = ? WHERE id = ?', (baslik, icerik, kategori, id))
             conn.commit()
             conn.close()
+            flash('Not başarıyla güncellendi! ✏️', 'basari')
             return redirect(url_for('ana_sayfa'))
+        else:
+            flash('Lütfen başlık ve içerik alanlarını doldurun.', 'hata')
     
     kayit = conn.execute('SELECT * FROM Notlar WHERE id = ?', (id,)).fetchone()
     conn.close()
