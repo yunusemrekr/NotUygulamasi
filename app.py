@@ -12,20 +12,14 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     conn.execute('''
-            CREATE TABLE IF NOT EXISTS Notlar (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                baslik TEXT NOT NULL,
-                icerik TEXT NOT NULL,
-                tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                kategori TEXT DEFAULT 'Genel'
-            )
-        ''')
-    # Var olan veritabanında 'kategori' sütunu yoksa ekle (Migration)
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(Notlar)")
-    sutunlar = [kolon[1] for kolon in cursor.fetchall()]
-    if 'kategori' not in sutunlar:
-        conn.execute("ALTER TABLE Notlar ADD COLUMN kategori TEXT DEFAULT 'Genel'")
+        CREATE TABLE IF NOT EXISTS Notlar (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            baslik TEXT NOT NULL,
+            icerik TEXT NOT NULL,
+            tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            kategori TEXT DEFAULT 'Genel'
+        )
+    ''')
     conn.commit()
     conn.close()
 
