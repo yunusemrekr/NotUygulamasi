@@ -41,9 +41,9 @@ def ana_sayfa():
 
 @app.route('/ekle', methods=['POST'])
 def not_ekle():
-    baslik = request.form.get('baslik')
-    icerik = request.form.get('icerik')
-    kategori = request.form.get('kategori', 'Genel')
+    baslik = (request.form.get('baslik') or '').strip()
+    icerik = (request.form.get('icerik') or '').strip()
+    kategori = (request.form.get('kategori') or 'Genel').strip()
     if baslik and icerik:
         conn = get_db_connection()
         conn.execute('INSERT INTO Notlar (baslik, icerik, kategori) VALUES (?, ?, ?)', (baslik, icerik, kategori))
@@ -51,7 +51,7 @@ def not_ekle():
         conn.close()
     return redirect(url_for('ana_sayfa'))
 
-@app.route('/sil/<int:id>', methods=['GET', 'POST'])
+@app.route('/sil/<int:id>', methods=['POST'])
 def not_sil(id):
     conn = get_db_connection()
     conn.execute('DELETE FROM Notlar WHERE id = ?', (id,))
@@ -63,9 +63,9 @@ def not_sil(id):
 def not_duzenle(id):
     conn = get_db_connection()
     if request.method == 'POST':
-        baslik = request.form.get('baslik')
-        icerik = request.form.get('icerik')
-        kategori = request.form.get('kategori', 'Genel')
+        baslik = (request.form.get('baslik') or '').strip()
+        icerik = (request.form.get('icerik') or '').strip()
+        kategori = (request.form.get('kategori') or 'Genel').strip()
         if baslik and icerik:
             conn.execute('UPDATE Notlar SET baslik = ?, icerik = ?, kategori = ? WHERE id = ?', (baslik, icerik, kategori, id))
             conn.commit()
